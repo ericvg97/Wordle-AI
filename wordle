@@ -1,0 +1,180 @@
+from words import words
+import time
+
+class Rule:
+    def __init__(self, letter, color):
+        self.letter = letter
+        self.color = color
+
+
+def isValid(word, rules):
+    letters = [0] * (ord('z') - ord('a') + 1)
+    for letter in word:
+        letters[ord(letter) - ord('a')] += 1
+    
+    for idx, rule in enumerate(rules):
+        if rule.color != 'GREEN':
+            continue
+
+        if word[idx] != rule.letter:
+            return False
+
+        letters[ord(rule.letter) - ord('a')] -= 1
+    
+    # print("First passed")
+    # print(letters)
+    # be
+    
+    for idx, rule in enumerate(rules):
+        if rule.color == 'GREEN':
+            continue
+
+        if rule.color == 'BLACK':
+            if letters[ord(rule.letter) - ord('a')] != 0:
+                return False
+            
+            continue
+                    
+        if letters[ord(rule.letter) - ord('a')] == 0 or word[idx] == rule.letter:
+            return False
+
+        letters[ord(rule.letter) - ord('a')] -= 1
+
+
+    return True
+
+
+
+def parse(rulesText):
+    rulesSplit = rulesText.split('-')
+    rules = []
+    for rule in rulesSplit:
+        component = rule.split('.')
+        letter = component[0]
+        color = component[1]
+        rules += [Rule(letter, color)]
+
+    return rules
+        
+def computeRule(targetWord, triedWord):
+    rules = [[]] * 5
+
+    lettersTargetWord = [0] * (ord('z') - ord('a') + 1)
+
+    for letter in targetWord:
+        lettersTargetWord[ord(letter) - ord('a')] += 1
+
+    for idx, letter in enumerate(targetWord):
+        if letter == triedWord[idx]:
+            lettersTargetWord[ord(letter) - ord('a')] -= 1
+
+            rules[idx] = triedWord[idx] + ".GREEN"
+    
+    for idx, letter in enumerate(targetWord):
+        if letter == triedWord[idx]:
+            continue
+        
+        letterTried = triedWord[idx]
+
+        # print(letterTried)
+        if lettersTargetWord[ord(letterTried) - ord('a')] > 0:
+            lettersTargetWord[ord(letterTried) - ord('a')] -= 1
+            
+            rules[idx] = letterTried + ".YELLOW"
+        
+        else:
+            rules[idx] = letterTried + ".BLACK"
+
+    return "-".join(rules)
+
+def findStillAvailable(rules, wereAvailable):
+    stillAvailable = []
+    for word in wereAvailable:
+        isStillValid = True
+        for rule in rules:
+            if not isValid(word, parse(rule)):
+                isStillValid = False
+        
+        if isStillValid:
+            stillAvailable += [word]
+
+    return stillAvailable
+
+def findBestWord(rules, stillAvailable):
+    bestTotal = 100000000000
+    bestWord = ""
+
+    for idx, wordTried in enumerate(words):
+        # print(idx, "/", len(words))
+        start = time.time()
+        total = 0
+        for wordTarget in stillAvailable:
+            stillAvailableNow = findStillAvailable([computeRule(wordTarget, wordTried)], stillAvailable)
+
+            numAvailable = len(stillAvailableNow)
+            total += numAvailable
+
+        if wordTried in ["abbey", "apeek", "hevea", "rebut"]:
+            print(wordTried, ": ", total)
+
+        if total < bestTotal:
+            bestTotal = total
+            bestWord = wordTried
+
+        end = time.time()
+        # print(end - start)
+        print("ETA: ", (end - start)*(len(words) - idx))
+
+    if bestTotal == len(stillAvailable):
+        return stillAvailable[0]
+
+    return bestWord
+
+
+if __name__ == '__main__':
+    rules = [
+        "r.BLACK-a.YELLOW-i.BLACK-s.BLACK-e.YELLOW",
+        "u.BLACK-n.BLACK-t.BLACK-i.BLACK-l.BLACK",
+        # "w.BLACK-o.BLACK-o.BLACK-e.GREEN-d.BLACK",
+        # "r.BLACK-e.YELLOW-b.GREEN-u.BLACK-t.BLACK",
+        "b.YELLOW-e.YELLOW-m.BLACK-a.YELLOW-d.BLACK"
+    ]
+
+    stillAvailable = findStillAvailable(rules, words)
+        
+    print(findBestWord(rules, stillAvailable))
+
+    # stillAvailable = words
+    # while True:
+    #     rules += [raw_input("Enter rule\n")]
+        
+    #     stillAvailable = findStillAvailable(rules, stillAvailable)
+        
+    #     print(stillAvailable)
+    #     print(len(stillAvailable))
+        
+    #     print(findBestWord(rules, stillAvailable))
+
+
+    # a.YELLOW-r.YELLOW-o.YELLOW-s.BLACK-e.BLACK
+    # b.BLACK-a.GREEN-r.YELLOW-m.BLACK-y.BLACK
+
+    # rules = [
+    #     "u.BLACK-n.BLACK-t.BLACK-i.BLACK-l.BLACK",
+    #     "r.YELLOW-e.BLACK-b.BLACK-u.BLACK-t.BLACK"
+    # ]
+
+    # stillAvailable = findStillAvailable(rules, words)
+        
+    # print(stillAvailable)
+    # print(len(stillAvailable))
+
+    # findBestWord([], words)
+            
+
+    # rules = [
+    #     "u.BLACK-n.YELLOW-t.BLACK-i.YELLOW-l.BLACK",
+    #     "s.BLACK-t.BLACK-a.BLACK-r.YELLOW-e.BLACK",
+    #     "a.BLACK-r.GREEN-o.BLACK-s.BLACK-e.BLACK",
+    #     "p.BLACK-i.YELLOW-l.BLACK-o.BLACK-t.BLACK"
+    # ]
