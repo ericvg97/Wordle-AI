@@ -1,0 +1,58 @@
+('s', 5936)
+('e', 5705)
+('a', 5330)
+('o', 3911)
+('r', 3909)
+('i', 3589)
+('l', 3114)
+('t', 3033)
+('n', 2787)
+('u', 2436)
+('d', 2298)
+('y', 2031)
+('c', 1920)
+('m', 1868)
+('h', 1708)
+('g', 1543)
+('b', 1519)
+('k', 1444)
+('w', 1028)
+('f', 990)
+('v', 674)
+('z', 391)
+('j', 289)
+('x', 287)
+('q', 111)
+
+store inula
+
+    tenPoints = "aeiorstlnu"
+    # notIn = "zvxqjfkw"
+    notIn = ""
+
+    maxPoints = 0
+    wordsMax = ""
+
+    for idx, word in enumerate(words):
+        start = time.time()
+        
+        for word2 in words:
+            for letter in notIn:
+                if letter in word or letter in word2:
+                    continue
+            count = 0
+
+            for letter in tenPoints:
+                if letter in word or letter in word2:
+                    count += 10
+
+            if (count > maxPoints):
+                maxPoints = count
+                wordsMax = word + " " + word2
+        
+        end = time.time()
+        print("ETA: ", (end - start)*(len(words) - idx))
+        print(wordsMax, maxPoints)
+
+    print(wordsMax)
+
