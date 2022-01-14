@@ -40,7 +40,6 @@ def isValid(word, rules):
     return True
 
 
-
 def parse(rulesText):
     rulesSplit = rulesText.split('-')
     rules = []
@@ -55,14 +54,14 @@ def parse(rulesText):
 def computeRule(targetWord, triedWord):
     rules = [[]] * 5
 
-    lettersTargetWord = [0] * 26
+    lettersTargetWord = [0] * (ord('z') - ord('a') + 1)
 
     for letter in targetWord:
-        lettersTargetWord[ord(letter) - 97] += 1
+        lettersTargetWord[ord(letter) - ord('a')] += 1
 
     for idx, letter in enumerate(targetWord):
         if letter == triedWord[idx]:
-            lettersTargetWord[ord(letter) - 97] -= 1
+            lettersTargetWord[ord(letter) - ord('a')] -= 1
 
             rules[idx] = triedWord[idx] + ".G"
     
@@ -124,7 +123,7 @@ def findBestWord(stillAvailable):
 if __name__ == '__main__':
     rules = [
         "i.B-n.Y-u.B-l.B-a.Y",
-        "s.B-t.Y-o.B-r.B-e.B"
+        "s.B-t.B-o.B-r.Y-e.B"
     ]
 
     rulesParsed = []
@@ -137,9 +136,10 @@ if __name__ == '__main__':
     print(findBestWord(stillAvailable))
 
     while True:
-        rule = [parse(raw_input("Enter rule\n"))]
+        rule = [parse(input("Enter rule\n"))]
         
         stillAvailable = findStillAvailable(rule, stillAvailable)
         
-        print(len(stillAvailable))        
+        print(len(stillAvailable)) 
         print(findBestWord(stillAvailable))
+        print(stillAvailable)       
