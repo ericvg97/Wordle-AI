@@ -106,6 +106,9 @@ def findBestWord(stillAvailable):
 
             numAvailable = len(stillAvailableNow)
             total += numAvailable
+            
+            if total > bestTotal:
+                break
 
         if total < bestTotal:
             bestTotal = total
@@ -122,18 +125,23 @@ def findBestWord(stillAvailable):
 
 if __name__ == '__main__':
     rules = [
-        "i.B-n.Y-u.B-l.B-a.Y",
-        "s.B-t.B-o.B-r.Y-e.B"
+        "i.B-n.B-u.B-l.Y-a.Y",
+        "s.G-t.B-o.Y-r.Y-e.B"
     ]
 
     rulesParsed = []
     for rule in rules:
         rulesParsed += [parse(rule)]
 
+    start = time.time()
 
     stillAvailable = findStillAvailable(rulesParsed, words)
         
     print(findBestWord(stillAvailable))
+
+    print(stillAvailable)
+
+    print(time.time() - start)
 
     while True:
         rule = [parse(input("Enter rule\n"))]
