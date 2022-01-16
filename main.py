@@ -1,9 +1,11 @@
 from BrowserInteractor import BrowserInteractor
+from TerminalInteractor import TerminalInteractor
 from Wordle import Wordle
 from words import words
 
 if __name__ == '__main__':
-    browserInteractor = BrowserInteractor()
+    interactor = BrowserInteractor()
+    # interactor = TerminalInteractor()
 
     found = False
     numTries = 0
@@ -18,7 +20,7 @@ if __name__ == '__main__':
         else:
             tryWord = wordle.findBestWord(stillAvailable)
 
-        rule = browserInteractor.tryWord(tryWord, numTries)
+        rule = interactor.tryWord(tryWord, numTries)
 
         win = True
         for result in rule:
