@@ -4,24 +4,38 @@ import time
 from pyshadow.main import Shadow
 from selenium.webdriver.common.action_chains import ActionChains
 from Wordle import Rule
+from Interactor import Interactor
+from typing import List
 
-class BrowserInteractor:
-    def tryWord(self, word, numTries):
-        self.writeWord(word)
-        return self.getRules(numTries)
+class BrowserInteractor(Interactor):
+    def __init__(self):
+        self.driver = webdriver.Chrome("./chromedriver")
+        self.driver.get("https://www.powerlanguage.co.uk/wordle/")
+        time.sleep(1)
 
-    def closeInitialModal(self):
+        self.shadow = Shadow(self.driver)
+        self.__closeInitialModal()
+    
+        
+    def __del__(self):
+        self.driver.close()
+
+    def tryWord(self, word: str, numTries: int) -> List[Rule]:
+        self.__writeWord(word)
+        return self.__getRules(numTries)
+
+    def __closeInitialModal(self) -> None:
         element = self.shadow.find_element("section")
         element.click()
 
-    def writeWord(self, word):
+    def __writeWord(self, word: str) -> None:
         actions = ActionChains(self.driver)
         actions.send_keys(word)
         actions.send_keys(Keys.ENTER)
         actions.perform()
         time.sleep(3)
 
-    def stringToRule(self, evaluation, letter):
+    def __stringToRule(self, evaluation: str, letter: str) -> Rule:
         if evaluation == "absent":
             rule = Rule(letter, 'B')
         elif evaluation == "present":
@@ -31,7 +45,7 @@ class BrowserInteractor:
         
         return rule
 
-    def getRules(self, row):
+    def __getRules(self, row: int) -> List[Rule]:
         element = self.shadow.find_elements("game-tile")
 
         rules = []
@@ -40,18 +54,7 @@ class BrowserInteractor:
             letter = element[idx].get_attribute("letter")
             
 
-            rules += [self.stringToRule(evaluation, letter)]
+            rules += [self.__stringToRule(evaluation, letter)]
 
         return rules
-
-    def __init__(self):
-        self.driver = webdriver.Chrome("./chromedriver")
-        self.driver.get("https://www.powerlanguage.co.uk/wordle/")
-        time.sleep(1)
-
-        self.shadow = Shadow(self.driver)
-        self.closeInitialModal()
-    
-    def __del__(self):
-        self.driver.close()
 
