@@ -1,7 +1,7 @@
 from BrowserInteractor import BrowserInteractor
 from TerminalInteractor import TerminalInteractor
 from Wordle import Wordle
-from words import words
+from Words import words
 
 if __name__ == '__main__':
     interactor = BrowserInteractor()
@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     found = False
     numTries = 0
-    wordle = Wordle()
+    wordle = Wordle(words)
     stillAvailable = words
 
     while not found and numTries < 6:

@@ -1,4 +1,3 @@
-from words import words
 import time
 
 class Rule:
@@ -7,6 +6,9 @@ class Rule:
         self.color = color
 
 class Wordle:
+    def __init__(self, allWords):
+        self.allWords = allWords
+    
     def isValid(self, word, rules):
         letters = [0] * (ord('z') - ord('a') + 1)
         for letter in word:
@@ -92,7 +94,7 @@ class Wordle:
         bestTotal = 100000000000
         bestWord = ""
 
-        for idx, wordTried in enumerate(words):
+        for idx, wordTried in enumerate(self.allWords):
             start = time.time()
             total = 0
             for wordTarget in stillAvailable:
@@ -109,7 +111,7 @@ class Wordle:
                 bestWord = wordTried
 
             end = time.time()
-            print("ETA: ", (end - start)*(len(words) - idx), len(stillAvailable))
+            print("ETA: ", (end - start)*(len(self.allWords) - idx), len(stillAvailable))
 
         if bestTotal == len(stillAvailable):
             return stillAvailable[0]
