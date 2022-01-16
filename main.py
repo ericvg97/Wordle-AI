@@ -1,4 +1,5 @@
 from BrowserInteractor import BrowserInteractor
+from EricStrategy import EricStrategy
 from TerminalInteractor import TerminalInteractor
 from Wordle import Wordle
 from Words import words
@@ -9,16 +10,12 @@ if __name__ == '__main__':
 
     found = False
     numTries = 0
-    wordle = Wordle(words)
+    wordle = Wordle()
+    strategy = EricStrategy(words, wordle)
     stillAvailable = words
 
     while not found and numTries < 6:
-        if numTries == 0:
-            tryWord = 'inula'
-        elif numTries == 1:
-            tryWord = 'store'
-        else:
-            tryWord = wordle.findBestWord(stillAvailable)
+        tryWord = strategy.findBestWord(stillAvailable, numTries)
 
         rule = interactor.tryWord(tryWord, numTries)
 
