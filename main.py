@@ -3,33 +3,18 @@ from EricStrategy import EricStrategy
 from TerminalInteractor import TerminalInteractor
 from Wordle import Wordle
 from Words import words
+import sys
+from Player import Player
 
 if __name__ == '__main__':
-    interactor = BrowserInteractor()
-    # interactor = TerminalInteractor()
+    if len(sys.argv) > 1 and sys.argv[1] == 'terminal':
+        interactor = TerminalInteractor()
+    else:
+        interactor = BrowserInteractor()
 
-    found = False
-    numTries = 0
     wordle = Wordle()
     strategy = EricStrategy(words, wordle)
-    stillAvailable = words
 
-    while not found and numTries < 6:
-        tryWord = strategy.findBestWord(stillAvailable, numTries)
-
-        rule = interactor.tryWord(tryWord, numTries)
-
-        win = True
-        for result in rule:
-            if result.color != 'G':
-                win = False
-                break
-
-        if win:
-            print("Yuhuuu I won")
-            break
-
-        stillAvailable = wordle.findStillAvailable(rule, stillAvailable)
-
-        numTries += 1
+    player = Player(words, interactor, strategy, wordle)
+    player.play()
         
