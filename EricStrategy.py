@@ -20,7 +20,6 @@ class EricStrategy(Strategy):
         start = time.time()
 
         for idx, wordTried in enumerate(self.allWords):
-            start = time.time()
             total = 0
             for wordTarget in stillAvailable:
                 stillAvailableNow = self.wordle.findStillAvailable(self.wordle.computeRule(wordTarget, wordTried), stillAvailable)
