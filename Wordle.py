@@ -37,17 +37,6 @@ class Wordle:
 
 
         return True
-
-    def parse(self, rulesText):
-        rulesSplit = rulesText.split('-')
-        rules = []
-        for rule in rulesSplit:
-            component = rule.split('.')
-            letter = component[0]
-            color = component[1]
-            rules += [Rule(letter, color)]
-
-        return rules
         
     def computeRule(self, targetWord, triedWord):
         rules = [[]] * 5
@@ -61,7 +50,7 @@ class Wordle:
             if letter == triedWord[idx]:
                 lettersTargetWord[ord(letter) - ord('a')] -= 1
 
-                rules[idx] = triedWord[idx] + ".G"
+                rules[idx] = Rule(triedWord[idx], "G")
         
         for idx, letter in enumerate(targetWord):
             if letter == triedWord[idx]:
@@ -72,12 +61,12 @@ class Wordle:
             if lettersTargetWord[ord(letterTried) - 97] > 0:
                 lettersTargetWord[ord(letterTried) - 97] -= 1
                 
-                rules[idx] = letterTried + ".Y"
+                rules[idx] = Rule(letterTried, "Y")
             
             else:
-                rules[idx] = letterTried + ".B"
+                rules[idx] = Rule(letterTried, "B")
 
-        return self.parse("-".join(rules))
+        return rules
 
     def findStillAvailable(self, rule, wereAvailable):
         stillAvailable = []
