@@ -53,6 +53,5 @@ class BrowserInteractor:
         self.closeInitialModal()
     
     def __del__(self):
-        print("dead")
         self.driver.close()
 
