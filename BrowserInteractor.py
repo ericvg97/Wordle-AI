@@ -6,10 +6,16 @@ from selenium.webdriver.common.action_chains import ActionChains
 from Wordle import Rule
 from Interactor import Interactor
 from typing import List
+from selenium.webdriver.chrome.options import Options
 
 class BrowserInteractor(Interactor):
     def __init__(self):
-        self.driver = webdriver.Chrome("./chromedriver")
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        self.driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=chrome_options)
+        
         self.driver.get("https://www.powerlanguage.co.uk/wordle/")
         time.sleep(1)
 
