@@ -15,11 +15,13 @@ class Player():
         found = False
         numTries = 0
         stillAvailable = self.words
+        rules = []
 
-        while not found and numTries < 6:
+        while numTries < 6:
             tryWord = self.strategy.findBestWord(stillAvailable, numTries)
 
             rule = self.interactor.tryWord(tryWord, numTries)
+            rules += [rule]
 
             win = True
             for result in rule:
@@ -28,9 +30,10 @@ class Player():
                     break
 
             if win:
-                print("Yuhuuu I won")
                 break
 
             stillAvailable = self.wordle.findStillAvailable(rule, stillAvailable)
 
             numTries += 1
+
+        return numTries, rules

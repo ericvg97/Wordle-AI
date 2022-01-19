@@ -16,5 +16,7 @@ if __name__ == '__main__':
     strategy = EricStrategy(words, wordle)
 
     player = Player(words, interactor, strategy, wordle)
-    player.play()
-        
+    numTries, rules = player.play()
+
+    if numTries < 6:
+        print("Yuhuuu I won")
