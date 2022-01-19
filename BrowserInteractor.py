@@ -30,6 +30,7 @@ class BrowserInteractor(Interactor):
     def __del__(self):
         if ENV == "local":
             pass
+            self.driver.close()
         else:
             self.driver.close()
 
