@@ -7,14 +7,18 @@ from Wordle import Rule
 from Interactor import Interactor
 from typing import List
 from selenium.webdriver.chrome.options import Options
+from env import ENV
 
 class BrowserInteractor(Interactor):
     def __init__(self):
-        chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=chrome_options)
+        if ENV == "local":
+            self.driver = webdriver.Chrome('./chromedriver')
+        else:
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            self.driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=chrome_options)
         
         self.driver.get("https://www.powerlanguage.co.uk/wordle/")
         time.sleep(1)
@@ -24,7 +28,10 @@ class BrowserInteractor(Interactor):
     
         
     def __del__(self):
-        self.driver.close()
+        if ENV == "local":
+            pass
+        else:
+            self.driver.close()
 
     def tryWord(self, word: str, numTries: int) -> List[Rule]:
         self.__writeWord(word)
